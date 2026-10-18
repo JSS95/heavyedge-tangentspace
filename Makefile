@@ -25,6 +25,8 @@ VECTORIZED_CSV := \
 
 all: $(PROFILES_HDF5) $(PROFILES_CSV) $(DIMLESS_CSV) $(LABELS_CSV) $(VECTORIZED_CSV)
 
+# Preprocessed data
+
 define MERGE_PROFILES
 data/profiles/$(1)/$(2).h5: $(shell ls _data/v1/profiles/$(1)/$(2)/*.h5)
 	mkdir -p $$(@D)
@@ -72,13 +74,31 @@ _temp/vectorized/all_profiles/%.csv: scripts/vectorize.py data/profiles/all_prof
 	mkdir -p $(@D)
 	python3 $^ --sigma 0.16 -o $@
 
-result/vectorized/all_profiles/%.csv: scripts/rename.py _temp/vectorized/all_profiles/%.csv data/profiles/all_profiles/%.h5
+data/vectorized/all_profiles/%.csv: scripts/rename.py _temp/vectorized/all_profiles/%.csv data/profiles/all_profiles/%.h5
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
-result/vectorized/mean_profiles/%.csv: scripts/vectorize.py data/profiles/mean_profiles/%.h5
+data/vectorized/mean_profiles/%.csv: scripts/vectorize.py data/profiles/mean_profiles/%.h5
 	mkdir -p $(@D)
 	python3 $^ --sigma 0.16 -o $@
+
+# Results
+
+result/dimless/all_profiles.csv: data/dimless/all_profiles/dataset3.csv data/dimless/all_profiles/dataset4.csv data/dimless/all_profiles/dataset5.csv
+	mkdir -p $(@D)
+	python3 -c "import pandas as pd; pd.concat([pd.read_csv(f) for f in '$^'.split()]).to_csv('$@', index=False)"
+
+result/dimless/mean_profiles.csv: data/dimless/mean_profiles/dataset3.csv data/dimless/mean_profiles/dataset4.csv data/dimless/mean_profiles/dataset5.csv
+	mkdir -p $(@D)
+	python3 -c "import pandas as pd; pd.concat([pd.read_csv(f) for f in '$^'.split()]).to_csv('$@', index=False)"
+
+result/vectorized/all_profiles.csv: data/vectorized/all_profiles/dataset3.csv data/vectorized/all_profiles/dataset4.csv data/vectorized/all_profiles/dataset5.csv
+	mkdir -p $(@D)
+	python3 -c "import pandas as pd; pd.concat([pd.read_csv(f) for f in '$^'.split()]).to_csv('$@', index=False)"
+
+result/vectorized/mean_profiles.csv: data/vectorized/mean_profiles/dataset3.csv data/vectorized/mean_profiles/dataset4.csv data/vectorized/mean_profiles/dataset5.csv
+	mkdir -p $(@D)
+	python3 -c "import pandas as pd; pd.concat([pd.read_csv(f) for f in '$^'.split()]).to_csv('$@', index=False)"
 
 clean:
 	rm -rf data _temp result
