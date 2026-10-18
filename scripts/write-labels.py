@@ -29,10 +29,19 @@ canonical_df = pd.read_csv(args.canonical)
 
 name_col = next((col for col in knees_df.columns if col.lower() == "name"), None)
 type_col = next((col for col in knees_df.columns if col.lower() == "type"), None)
-canonical_name_col = next((col for col in canonical_df.columns if col.lower() == "name"), None)
-canonical_type_col = next((col for col in canonical_df.columns if col.lower() == "type"), None)
+canonical_name_col = next(
+    (col for col in canonical_df.columns if col.lower() == "name"), None
+)
+canonical_type_col = next(
+    (col for col in canonical_df.columns if col.lower() == "type"), None
+)
 
-if name_col is None or type_col is None or canonical_name_col is None or canonical_type_col is None:
+if (
+    name_col is None
+    or type_col is None
+    or canonical_name_col is None
+    or canonical_type_col is None
+):
     raise ValueError("Label files must contain both 'name' and 'Type' columns.")
 
 name = knees_df[name_col].to_numpy()
