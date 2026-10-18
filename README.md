@@ -34,7 +34,7 @@ make clean
 To contribute to notebooks, additionally install `nbstripout`:
 
 ```sh
-uv pip install jupyter ipykernel nbstripout
+uv pip install jupyter nbstripout
 ```
 
 Then enable the Git filter.
@@ -42,7 +42,7 @@ This needs to be done only once after cloning:
 
 ```sh
 nbstripout --install --attributes .gitattributes
-git config --local filter.nbstripout.extrakeys 'metadata.kernelspec metadata.language_info cell.metadata.tags'
+git config --local filter.nbstripout.extrakeys 'metadata.kernelspec metadata.language_info'
 ```
 
 ### Lint

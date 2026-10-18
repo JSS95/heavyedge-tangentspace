@@ -25,7 +25,8 @@ VECTORIZED_CSV := \
 
 all: \
 $(PROFILES_HDF5) $(PROFILES_CSV) $(DIMLESS_CSV) $(LABELS_CSV) $(VECTORIZED_CSV) \
-result/vectorized/all_profiles.csv result/vectorized/mean_profiles.csv
+result/vectorized/all_profiles/gap_to_thickness_ratio.ipynb result/vectorized/all_profiles/capillary_number.ipynb result/vectorized/all_profiles/cosine_of_contact_angle.ipynb \
+result/vectorized/mean_profiles/gap_to_thickness_ratio.ipynb result/vectorized/mean_profiles/capillary_number.ipynb result/vectorized/mean_profiles/cosine_of_contact_angle.ipynb
 
 # Preprocessed data
 
@@ -102,13 +103,21 @@ result/vectorized/mean_profiles.csv: data/vectorized/mean_profiles/dataset3.csv 
 	mkdir -p $(@D)
 	python3 -c "import pandas as pd; pd.concat([pd.read_csv(f) for f in '$^'.split()]).to_csv('$@', index=False)"
 
-result/vectorized/all_profiles.ipynb: notebooks/vectorized.ipynb result/dimless/all_profiles.csv result/vectorized/all_profiles.csv
+_temp/umap/all_profiles.csv: scripts/embed.py result/vectorized/all_profiles.csv
 	mkdir -p $(@D)
-	papermill $< $@ -p X result/dimless/all_profiles.csv -p y result/vectorized/all_profiles.csv
+	python3 $^ -o $@
 
-result/vectorized/mean_profiles.ipynb: notebooks/vectorized.ipynb result/dimless/mean_profiles.csv result/vectorized/mean_profiles.csv
+_temp/umap/mean_profiles.csv: scripts/embed.py result/vectorized/mean_profiles.csv
 	mkdir -p $(@D)
-	papermill $< $@ -p X result/dimless/mean_profiles.csv -p y result/vectorized/mean_profiles.csv
+	python3 $^ -o $@
+
+result/vectorized/all_profiles/%.ipynb: notebooks/vectorized.ipynb result/dimless/all_profiles.csv _temp/umap/all_profiles.csv
+	mkdir -p $(@D)
+	papermill $< $@ -k python3 -l python -p X result/dimless/all_profiles.csv -p y _temp/umap/all_profiles.csv -p color $*
+
+result/vectorized/mean_profiles/%.ipynb: notebooks/vectorized.ipynb result/dimless/mean_profiles.csv _temp/umap/mean_profiles.csv
+	mkdir -p $(@D)
+	papermill $< $@ -k python3 -l python -p X result/dimless/mean_profiles.csv -p y _temp/umap/mean_profiles.csv -p color $*
 
 clean:
 	rm -rf data _temp result
