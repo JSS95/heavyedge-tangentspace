@@ -1,4 +1,4 @@
-name: Setup dataset
+name: Setup dataset and run scripts
 
 on:
   push:
