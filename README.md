@@ -26,3 +26,27 @@ To clean:
 ```sh
 make clean
 ```
+
+## Developing
+
+### Jupyter notebooks
+
+To contribute to notebooks, additionally install `nbstripout`:
+
+```sh
+uv pip install jupyter ipykernel nbstripout
+```
+
+Then enable the Git filter.
+This needs to be done only once after cloning:
+
+```sh
+nbstripout --install --attributes .gitattributes
+```
+
+### Lint
+
+```sh
+ruff format .
+ruff check --fix .
+```
