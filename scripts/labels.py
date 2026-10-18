@@ -24,8 +24,8 @@ def combine_labels(knees, canonical):
     return out
 
 
-knees_df = pd.read_csv(args.knees)
-canonical_df = pd.read_csv(args.canonical)
+knees_df = pd.read_csv(args.knees, dtype=str)
+canonical_df = pd.read_csv(args.canonical, dtype=str)
 
 name_col = next((col for col in knees_df.columns if col.lower() == "name"), None)
 type_col = next((col for col in knees_df.columns if col.lower() == "type"), None)
@@ -44,9 +44,9 @@ if (
 ):
     raise ValueError("Label files must contain both 'name' and 'Type' columns.")
 
-name = knees_df[name_col].to_numpy()
-knees = knees_df[type_col].to_numpy()
-canonical = canonical_df[canonical_type_col].to_numpy()
+name = knees_df[name_col].apply(lambda x: f"{args.out.stem}/{x}")
+knees = knees_df[type_col].astype(int).to_numpy()
+canonical = canonical_df[canonical_type_col].astype(int).to_numpy()
 labels = combine_labels(knees, canonical)
 
 pd.DataFrame({"name": name, "type": labels}).to_csv(args.out, index=False)

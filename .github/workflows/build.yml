@@ -1,13 +1,13 @@
 name: Build
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
+    branches: [ master ]
+  push:
     branches: [ master ]
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
     env:
       PROFILES_V1_GDRIVE: ${{ secrets.PROFILES_V1_GDRIVE }}
@@ -38,7 +38,7 @@ jobs:
           . .venv/bin/activate
           ./setup.sh
 
-      - name: Confirm downloaded data exists
+      - name: Build
         run: |
-          test -d _data
-          find _data -maxdepth 2 -type f | head
+          . .venv/bin/activate
+          make
