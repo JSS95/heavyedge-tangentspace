@@ -20,8 +20,8 @@ DIMLESS_CSV := \
 LABELS_CSV := $(patsubst _data/v1/labels/%/knees.csv,data/labels/mean_profiles/%.csv,$(wildcard _data/v1/labels/dataset*/knees.csv))
 
 VECTORIZED_CSV := \
-	$(patsubst data/profiles/all_profiles/%.h5,result/vectorized/all_profiles/%.csv,$(PROFILES_HDF5)) \
-	$(patsubst data/profiles/mean_profiles/%.h5,result/vectorized/mean_profiles/%.csv,$(PROFILES_HDF5))
+	$(patsubst data/profiles/all_profiles/%.h5,data/vectorized/all_profiles/%.csv,$(PROFILES_HDF5)) \
+	$(patsubst data/profiles/mean_profiles/%.h5,data/vectorized/mean_profiles/%.csv,$(PROFILES_HDF5))
 
 all: \
 $(PROFILES_HDF5) $(PROFILES_CSV) $(DIMLESS_CSV) $(LABELS_CSV) $(VECTORIZED_CSV) \
