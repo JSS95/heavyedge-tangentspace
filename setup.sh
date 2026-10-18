@@ -22,3 +22,17 @@ uvx --from 'gdown<6.0.0' gdown --fuzzy "$profiles_gdrive_url" -O "$archive_path"
 if [ -f "$archive_path" ]; then
   tar -xf "$archive_path" -C _data
 fi
+
+mkdir -p _temp/all_profiles _temp/mean_profiles
+for dataset in _data/v1/profiles/all_profiles/*.tar.gz; do
+    stem=$(basename "$dataset" .tar.gz)
+    dirname=_temp/all_profiles/"$stem"
+    mkdir -p "$dirname"
+    tar -xzf "$dataset" -C "$dirname"
+done
+for dataset in _data/v1/profiles/mean_profiles/*.tar.gz; do
+    stem=$(basename "$dataset" .tar.gz)
+    dirname=_temp/mean_profiles/"$stem"
+    mkdir -p "$dirname"
+    tar -xzf "$dataset" -C "$dirname"
+done
