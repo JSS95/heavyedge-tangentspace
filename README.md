@@ -34,7 +34,7 @@ make clean
 To contribute to notebooks, additionally install `nbstripout`:
 
 ```sh
-uv pip install jupyter ipykernel nbstripout
+uv pip install jupyter nbstripout
 ```
 
 Then enable the Git filter.

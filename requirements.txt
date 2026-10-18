@@ -4,3 +4,4 @@ pint
 umap-learn
 matplotlib
 papermill
+ipykernel
