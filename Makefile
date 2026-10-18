@@ -40,7 +40,11 @@ $(foreach \
 	) \
 )
 
-data/profiles/all_profiles/%.csv: scripts/profiles.py data/profiles/all_profiles/%.h5
+_temp/profiles/all_profiles/%.csv: scripts/profiles.py data/profiles/all_profiles/%.h5
+	mkdir -p $(@D)
+	python3 $^ -o $@
+
+data/profiles/all_profiles/%.csv: scripts/rename.py _temp/profiles/all_profiles/%.csv data/profiles/all_profiles/%.h5
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
@@ -48,7 +52,11 @@ data/profiles/mean_profiles/%.csv: scripts/profiles.py data/profiles/mean_profil
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
-data/dimless/all_profiles/%.csv: scripts/dimless.py _data/v1/process_variables/all_profiles/%.csv _data/v1/datapackage.json
+_temp/dimless/all_profiles/%.csv: scripts/dimless.py _data/v1/process_variables/all_profiles/%.csv _data/v1/datapackage.json
+	mkdir -p $(@D)
+	python3 $^ -o $@
+
+data/dimless/all_profiles/%.csv: scripts/rename.py _temp/dimless/all_profiles/%.csv data/profiles/all_profiles/%.h5
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
@@ -60,13 +68,17 @@ data/labels/mean_profiles/%.csv: scripts/labels.py _data/v1/labels/%/knees.csv _
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
-result/vectorized/all_profiles/%.csv: scripts/vectorize.py data/profiles/all_profiles/%.h5
+_temp/vectorized/all_profiles/%.csv: scripts/vectorize.py data/profiles/all_profiles/%.h5
 	mkdir -p $(@D)
 	python3 $^ --sigma 0.16 -o $@
+
+result/vectorized/all_profiles/%.csv: scripts/rename.py _temp/vectorized/all_profiles/%.csv data/profiles/all_profiles/%.h5
+	mkdir -p $(@D)
+	python3 $^ -o $@
 
 result/vectorized/mean_profiles/%.csv: scripts/vectorize.py data/profiles/mean_profiles/%.h5
 	mkdir -p $(@D)
 	python3 $^ --sigma 0.16 -o $@
 
 clean:
-	rm -rf data result
+	rm -rf data _temp result
