@@ -1,4 +1,4 @@
-name: Setup dataset and run scripts
+name: Build
 
 on:
   push:
@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROFILES_V1_GDRIVE: ${{ secrets.PROFILES_V1_GDRIVE }}
+      LABELS_V1_GDRIVE: ${{ secrets.LABELS_V1_GDRIVE }}
 
     steps:
       - name: Check out repository

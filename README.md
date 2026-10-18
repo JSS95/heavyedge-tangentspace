@@ -12,3 +12,17 @@ export PROFILES_V1_GDRIVE="<Google drive link>"
 export LABELS_V1_GDRIVE="<Google drive link>"
 ./setup.sh
 ```
+
+## Build
+
+To build:
+
+```sh
+make
+```
+
+To clean:
+
+```sh
+make clean
+```
