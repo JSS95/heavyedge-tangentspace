@@ -67,7 +67,7 @@ upstream_lip_length_ratio = (df["upstream_lip_length"] / df["coating_gap"]).appl
 
 dimless = pd.DataFrame(
     {
-        "name": df["name"],
+        "name": df["name"].apply(lambda x: f"{args.out.stem}/{x}"),
         "slurry": df["slurry"],
         "gap_to_thickness_ratio": Rgt.apply(lambda x: x.magnitude),
         "capillary_number": Ca.apply(lambda x: x.magnitude),
