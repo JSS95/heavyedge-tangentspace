@@ -31,5 +31,6 @@ with ProfileData(args.profiles) as data:
         writer = csv.writer(csvfile)
         writer.writerow(["name", *range(20)])
         for Y, _, name in data:
-            v = vectorize(Y, args.sigma / dx)
+            y = Y / np.trapezoid(Y, x)
+            v = vectorize(y, args.sigma / dx)
             writer.writerow([name, *v])
