@@ -1,0 +1,43 @@
+name: Setup dataset
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      PROFILES_V1_GDRIVE: ${{ secrets.PROFILES_V1_GDRIVE }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install uv
+
+      - name: Create venv and install requirements
+        run: |
+          uv venv
+          . .venv/bin/activate
+          uv pip install -r requirements.txt
+
+      - name: Run project setup
+        run: |
+          . .venv/bin/activate
+          ./setup.sh
+
+      - name: Confirm downloaded data exists
+        run: |
+          test -d _data
+          find _data -maxdepth 2 -type f | head
