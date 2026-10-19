@@ -2,6 +2,7 @@ import argparse
 import csv
 import pathlib
 
+import numpy as np
 from aeon.transformations.collection.convolution_based import MiniRocket
 from heavyedge import ProfileData
 
@@ -13,18 +14,20 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-minirocket = MiniRocket()
-fitted = False
+with ProfileData(args.profiles) as data:
+    profiles = [(np.asarray(y[:L], dtype=np.float32), name) for y, L, name in data]
 
-with ProfileData(args.profiles) as data, args.output.open("w", newline="") as csvfile:
+if not profiles:
+    raise ValueError(f"No profiles found in {args.profiles}")
+
+X = np.stack([profile for profile, _ in profiles])
+names = [name for _, name in profiles]
+del profiles
+
+features = MiniRocket(random_state=42).fit_transform(X)
+
+with args.output.open("w", newline="") as csvfile:
     writer = csv.writer(csvfile)
-
-    for y, L, name in data:
-        y = y[:L].reshape(1, -1)
-        if not fitted:
-            features = minirocket.fit_transform(y)
-            writer.writerow(["name", *range(features.shape[1])])
-            fitted = True
-        else:
-            features = minirocket.transform(y)
-        writer.writerow([name, *features.flatten()])
+    writer.writerow(["name", *range(features.shape[1])])
+    for name, row in zip(names, features):
+        writer.writerow([name, *row])
