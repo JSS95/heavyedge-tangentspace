@@ -1,4 +1,4 @@
-heavyedge >= 1.8.0
+heavyedge >= 1.8.1
 pandas
 pint
 umap-learn
