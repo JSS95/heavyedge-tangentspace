@@ -7,7 +7,7 @@ import h5py
 
 def load_names(profiles: pathlib.Path) -> dict[str, str]:
     names = {}
-    for path in sorted(profiles.glob("*.h5")):
+    for path in sorted(profiles.rglob("*.h5")):
         with h5py.File(path) as data:
             group_name = data.attrs["name"]
             for profile_name in data["names"].asstr()[:]:
@@ -38,6 +38,8 @@ if args.profiles.is_dir():
     source_profiles = args.profiles
 else:
     merged_profiles = args.profiles
+    if dataset == "all_profiles":
+        source_profiles = project_root / "_data/v1/profiles/all_profiles"
 
 groups = load_names(source_profiles)
 with h5py.File(merged_profiles) as data:
