@@ -4,8 +4,13 @@
 .PHONY: all clean
 
 all: \
+data/profiles/mean_profiles.h5 data/profiles/all_profiles.h5 \
+data/profiles/mean_profiles.csv data/profiles/all_profiles.csv \
+data/dimless/mean_profiles.csv data/dimless/all_profiles.csv \
+data/labels/mean_profiles.csv \
+result/vectorized/mean_profiles/gap_to_thickness_ratio.ipynb result/vectorized/mean_profiles/capillary_number.ipynb result/vectorized/mean_profiles/cosine_of_contact_angle.ipynb \
 result/vectorized/all_profiles/gap_to_thickness_ratio.ipynb result/vectorized/all_profiles/capillary_number.ipynb result/vectorized/all_profiles/cosine_of_contact_angle.ipynb \
-result/vectorized/mean_profiles/gap_to_thickness_ratio.ipynb result/vectorized/mean_profiles/capillary_number.ipynb result/vectorized/mean_profiles/cosine_of_contact_angle.ipynb
+result/minirocket/mds/mean_profiles.csv result/minirocket/mds/all_profiles.csv
 
 clean:
 	rm -rf data _temp result
@@ -115,21 +120,21 @@ result/vectorized/all_profiles.csv: scripts/rename.py _temp/vectorized/all_profi
 
 ## Embed tangent space vectors
 
-result/umap/all_profiles.csv: scripts/embed.py result/vectorized/all_profiles.csv
+result/vectorized/umap/all_profiles.csv: scripts/embed_umap.py result/vectorized/all_profiles.csv
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
-result/umap/mean_profiles.csv: scripts/embed.py result/vectorized/mean_profiles.csv
+result/vectorized/umap/mean_profiles.csv: scripts/embed_umap.py result/vectorized/mean_profiles.csv
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
-result/vectorized/all_profiles/%.ipynb: notebooks/vectorized.ipynb data/dimless/all_profiles.csv result/umap/all_profiles.csv
+result/vectorized/all_profiles/%.ipynb: notebooks/vectorized.ipynb data/dimless/all_profiles.csv result/vectorized/umap/all_profiles.csv
 	mkdir -p $(@D)
-	papermill $< $@ -k python3 -l python -p X data/dimless/all_profiles.csv -p y result/umap/all_profiles.csv -p color $*
+	papermill $< $@ -k python3 -l python -p X data/dimless/all_profiles.csv -p y result/vectorized/umap/all_profiles.csv -p color $*
 
-result/vectorized/mean_profiles/%.ipynb: notebooks/vectorized.ipynb data/dimless/mean_profiles.csv result/umap/mean_profiles.csv
+result/vectorized/mean_profiles/%.ipynb: notebooks/vectorized.ipynb data/dimless/mean_profiles.csv result/vectorized/umap/mean_profiles.csv
 	mkdir -p $(@D)
-	papermill $< $@ -k python3 -l python -p X data/dimless/mean_profiles.csv -p y result/umap/mean_profiles.csv -p color $*
+	papermill $< $@ -k python3 -l python -p X data/dimless/mean_profiles.csv -p y result/vectorized/umap/mean_profiles.csv -p color $*
 
 ## MiniRocket feature extraction
 
@@ -145,3 +150,13 @@ result/minirocket/mean_profiles.csv: _temp/minirocket/mean_profiles.csv
 result/minirocket/all_profiles.csv: scripts/rename.py _temp/minirocket/all_profiles.csv data/profiles/all_profiles.h5
 	mkdir -p $(@D)
 	python3 $^ -o $@
+
+## Embed MiniRocket features
+
+result/minirocket/mds/all_profiles.csv: scripts/embed_mds.py result/minirocket/all_profiles.csv
+	mkdir -p $(@D)
+	python3 $^ --n 50 -o $@
+
+result/minirocket/mds/mean_profiles.csv: scripts/embed_mds.py result/minirocket/mean_profiles.csv
+	mkdir -p $(@D)
+	python3 $^ --n 50 -o $@
