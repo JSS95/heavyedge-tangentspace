@@ -130,3 +130,18 @@ result/vectorized/all_profiles/%.ipynb: notebooks/vectorized.ipynb data/dimless/
 result/vectorized/mean_profiles/%.ipynb: notebooks/vectorized.ipynb data/dimless/mean_profiles.csv result/umap/mean_profiles.csv
 	mkdir -p $(@D)
 	papermill $< $@ -k python3 -l python -p X data/dimless/mean_profiles.csv -p y result/umap/mean_profiles.csv -p color $*
+
+## MiniRocket feature extraction
+
+# e.g.) _temp/minirocket/all_profiles.csv _temp/minirocket/mean_profiles.csv
+_temp/minirocket/%.csv: scripts/minirocket.py data/profiles/%.h5
+	mkdir -p $(@D)
+	python3 $^ -o $@
+
+result/minirocket/mean_profiles.csv: _temp/minirocket/mean_profiles.csv
+	mkdir -p $(@D)
+	cp $< $@
+
+result/minirocket/all_profiles.csv: scripts/rename.py _temp/minirocket/all_profiles.csv data/profiles/all_profiles.h5
+	mkdir -p $(@D)
+	python3 $^ -o $@
