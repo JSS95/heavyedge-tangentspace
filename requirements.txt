@@ -1,10 +1,10 @@
 heavyedge >= 1.8.1
+numpy >= 2.0, < 2.4
 pandas
 pint
 scikit-learn
 aeon
 umap-learn
-numba >= 0.64
 matplotlib
 papermill
 ipykernel
