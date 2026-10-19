@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make profiles have the same contact point by padding them.
 - Normalize vectorized features.
 
+### Fixed
+
+- Profile dataset v1.0.1 is used to correct process variables.
+
 ## [0.1.0] - 2026-10-19
 
 ### Added
