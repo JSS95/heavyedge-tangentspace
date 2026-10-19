@@ -1,6 +1,7 @@
 heavyedge >= 1.8.1
 pandas
 pint
+tsai
 umap-learn
 matplotlib
 papermill

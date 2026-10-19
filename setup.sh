@@ -8,7 +8,7 @@ if ! command -v uv >/dev/null 2>&1; then
 fi
 
 # Download profile dataset
-archive_path="_data/heavyedge-profiles-v1.0.0.tar.gz"
+archive_path="_data/heavyedge-profiles.tar.gz"
 mkdir -p "$(dirname "$archive_path")"
 uvx --from 'gdown<6.0.0' gdown --fuzzy "$PROFILES_V1_GDRIVE" -O "$archive_path"
 if [ -f "$archive_path" ]; then

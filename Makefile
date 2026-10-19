@@ -98,6 +98,8 @@ data/labels/mean_profiles.csv: _temp/labels/mean_profiles/dataset3.csv _temp/lab
 
 # Results
 
+## Tangent space vectorization
+
 # e.g.) _temp/vectorized/mean_profiles/dataset5.csv
 define VECTORIZE
 _temp/vectorized/$(1)/$(2).csv: scripts/vectorize.py data/profiles/$(1)/$(2).h5
