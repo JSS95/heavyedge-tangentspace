@@ -21,6 +21,9 @@ def vectorize(Y, sigma):
 
     func_space = [part.mean() for part in np.array_split(smooth_Y, 10)]
     tan_space = [part.mean() for part in np.array_split(smooth_tan, 10)]
+
+    func_space = np.array(func_space) / np.linalg.norm(func_space)
+    tan_space = np.array(tan_space) / np.linalg.norm(tan_space)
     return np.concatenate([func_space, tan_space])
 
 
