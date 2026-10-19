@@ -33,7 +33,7 @@ with ProfileData(args.profiles) as data:
     with args.output.open("w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["name", *range(20)])
-        for Y, _, name in data:
-            y = Y / np.trapezoid(Y, x)
-            v = vectorize(y, args.sigma / dx)
+        for Y, L, name in data:
+            y = Y / np.trapezoid(Y[:L], x[:L])
+            v = vectorize(y[:L], args.sigma / dx)
             writer.writerow([name, *v])

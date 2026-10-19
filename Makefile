@@ -100,26 +100,10 @@ data/labels/mean_profiles.csv: _temp/labels/mean_profiles/dataset3.csv _temp/lab
 
 ## Tangent space vectorization
 
-# e.g.) _temp/vectorized/mean_profiles/dataset5.csv
-define VECTORIZE
-_temp/vectorized/$(1)/$(2).csv: scripts/vectorize.py data/profiles/$(1)/$(2).h5
-	mkdir -p $$(@D)
-	python3 $$^ --sigma 0.16 -o $$@
-endef
-$(foreach \
-	target, \
-	all_profiles mean_profiles, \
-	$(foreach \
-		dataset, \
-		dataset1 dataset2 dataset3 dataset4 dataset5, \
-		$(eval $(call VECTORIZE,$(target),$(dataset))) \
-	) \
-)
-
 # e.g.) _temp/vectorized/all_profiles.csv _temp/vectorized/mean_profiles.csv
-_temp/vectorized/%.csv: _temp/vectorized/%/dataset3.csv _temp/vectorized/%/dataset4.csv _temp/vectorized/%/dataset5.csv
+_temp/vectorized/%.csv: scripts/vectorize.py data/profiles/%.h5
 	mkdir -p $(@D)
-	python3 -c "import pandas as pd; pd.concat([pd.read_csv(f) for f in '$^'.split()]).to_csv('$@', index=False)"
+	python3 $^ --sigma 0.16 -o $@
 
 result/vectorized/mean_profiles.csv: _temp/vectorized/mean_profiles.csv
 	mkdir -p $(@D)
@@ -129,7 +113,7 @@ result/vectorized/all_profiles.csv: scripts/rename.py _temp/vectorized/all_profi
 	mkdir -p $(@D)
 	python3 $^ -o $@
 
-## embedding
+## Embed tangent space vectors
 
 result/umap/all_profiles.csv: scripts/embed.py result/vectorized/all_profiles.csv
 	mkdir -p $(@D)
