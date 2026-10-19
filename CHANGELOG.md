@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## UNRELEASED
 
+### Added
+
+- MiniRocket feature extraction of normalized profiles.
+- MDS embedding of MiniRocket features.
+
 ### Changed
 
 - Make profiles have the same contact point by padding them.
